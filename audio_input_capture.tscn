@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://ke4dj4k6a82x"]
+
+[ext_resource type="Script" path="res://audio_input_capture.gd" id="1_g5gm6"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_yo55n"]
+
+[node name="AudioInputCapture" type="Node"]
+script = ExtResource("1_g5gm6")
+
+[node name="MicAudioPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_yo55n")

@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://svgb3x36bw1i"]
+
+[ext_resource type="Script" path="res://jam_voip.gd" id="1_ky30s"]
+[ext_resource type="PackedScene" uid="uid://ke4dj4k6a82x" path="res://audio_input_capture.tscn" id="2_dja1s"]
+[ext_resource type="PackedScene" uid="uid://c44asxr8iilvc" path="res://network_audio.tscn" id="3_anq0g"]
+[ext_resource type="Script" path="res://addons/jam_launch/core/JamConnect.gd" id="4_vgwxb"]
+
+[node name="JamVoip" type="Node2D"]
+script = ExtResource("1_ky30s")
+
+[node name="AudioInputCapture" parent="." instance=ExtResource("2_dja1s")]
+
+[node name="NetworkAudio" parent="." instance=ExtResource("3_anq0g")]
+
+[node name="JamConnect" type="Node" parent="."]
+script = ExtResource("4_vgwxb")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 180.0
+
+[connection signal="got_opus_packet" from="AudioInputCapture" to="." method="_on_audio_input_capture_got_opus_packet"]
+[connection signal="local_player_joined" from="JamConnect" to="." method="_on_jam_connect_local_player_joined"]
+[connection signal="player_connected" from="JamConnect" to="." method="_on_jam_connect_player_connected"]
+[connection signal="server_post_ready" from="JamConnect" to="." method="_on_jam_connect_server_post_ready"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

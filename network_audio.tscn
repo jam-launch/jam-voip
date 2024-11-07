@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://c44asxr8iilvc"]
+
+[ext_resource type="Script" path="res://network_audio.gd" id="1_dxove"]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_2j478"]
+mix_rate = 48000.0
+buffer_length = 0.2
+
+[node name="NetworkAudio" type="Node"]
+script = ExtResource("1_dxove")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamGenerator_2j478")
