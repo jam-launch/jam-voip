@@ -1,12 +1,7 @@
 extends Node
 class_name AudioInputCapture
 
-signal got_opus_packet(pkt: PackedByteArray)
-
-# TODO: when the encoder in configurable, this will be dynamic
-var packet_samples: int:
-	get:
-		return 960
+signal got_opus_packet(pkt: PackedByteArray, samples: int)
 
 var capture: AudioEffectCapture = null
 var input_buffer: PackedVector2Array = []
@@ -48,9 +43,12 @@ func _process(delta: float) -> void:
 		else:
 			print("unexpected empty input buffer")
 	
+	# TODO: when the encoder is configurable, this will be dynamic
+	var packet_samples = 960
+	
 	while input_buffer.size() >= packet_samples:
 		var chunk = input_buffer.slice(0, packet_samples)
 		var opus_pkt := encoder.encode_stream_buffer(chunk)
 		if opus_pkt.size() > 0:
-			got_opus_packet.emit(opus_pkt)
+			got_opus_packet.emit(opus_pkt, packet_samples)
 		input_buffer = input_buffer.slice(packet_samples)

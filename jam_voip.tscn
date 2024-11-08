@@ -1,16 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://svgb3x36bw1i"]
+[gd_scene load_steps=6 format=3 uid="uid://svgb3x36bw1i"]
 
 [ext_resource type="Script" path="res://jam_voip.gd" id="1_ky30s"]
 [ext_resource type="PackedScene" uid="uid://ke4dj4k6a82x" path="res://audio_input_capture.tscn" id="2_dja1s"]
-[ext_resource type="PackedScene" uid="uid://c44asxr8iilvc" path="res://network_audio.tscn" id="3_anq0g"]
+[ext_resource type="Script" path="res://peer_audio_broadcast.gd" id="3_jqfcs"]
 [ext_resource type="Script" path="res://addons/jam_launch/core/JamConnect.gd" id="4_vgwxb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_bsd2v"]
+font_size = 36
+outline_size = 6
+outline_color = Color(0.0687983, 0.0687983, 0.0687983, 1)
 
 [node name="JamVoip" type="Node2D"]
 script = ExtResource("1_ky30s")
 
 [node name="AudioInputCapture" parent="." instance=ExtResource("2_dja1s")]
 
-[node name="NetworkAudio" parent="." instance=ExtResource("3_anq0g")]
+[node name="PeerAudioBroadcast" type="Node" parent="."]
+script = ExtResource("3_jqfcs")
+
+[node name="Peers" type="Node2D" parent="."]
 
 [node name="JamConnect" type="Node" parent="."]
 script = ExtResource("4_vgwxb")
@@ -18,8 +26,35 @@ script = ExtResource("4_vgwxb")
 [node name="Timer" type="Timer" parent="."]
 wait_time = 180.0
 
+[node name="Countdown" type="Timer" parent="."]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -36.0
+offset_top = -50.0
+offset_right = 36.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 100
+
+[node name="CountdownClock" type="Label" parent="HUD/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0:00"
+label_settings = SubResource("LabelSettings_bsd2v")
+
 [connection signal="got_opus_packet" from="AudioInputCapture" to="." method="_on_audio_input_capture_got_opus_packet"]
+[connection signal="got_audio_packet" from="PeerAudioBroadcast" to="." method="_on_peer_audio_broadcast_got_audio_packet"]
 [connection signal="local_player_joined" from="JamConnect" to="." method="_on_jam_connect_local_player_joined"]
+[connection signal="local_player_left" from="JamConnect" to="." method="_on_jam_connect_local_player_left"]
 [connection signal="player_connected" from="JamConnect" to="." method="_on_jam_connect_player_connected"]
+[connection signal="player_disconnected" from="JamConnect" to="." method="_on_jam_connect_player_disconnected"]
 [connection signal="server_post_ready" from="JamConnect" to="." method="_on_jam_connect_server_post_ready"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Countdown" to="." method="_on_countdown_timeout"]
