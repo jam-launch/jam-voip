@@ -46,7 +46,7 @@ func _process(delta: float) -> void:
 			if absf(f.x) > max_volume:
 				max_volume = absf(f.x)
 	
-	$Sprite2D.scale = $Sprite2D.scale.lerp(Vector2(0.25 + log(1.0 + (max_volume * 2)), 0.25 + log(1.0 + (max_volume * 2))), 0.3)
+	$Sprite2D.scale = $Sprite2D.scale.lerp(Vector2(0.95 + log(1.0 + (max_volume * 2)), 0.95 + log(1.0 + (max_volume * 2))), 0.3)
 
 func queue_pkt(pkt: PackedByteArray, samples: int):
 	pkt_buffer.push_back(CompressedAudioPacket.create(pkt, samples))

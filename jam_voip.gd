@@ -41,7 +41,7 @@ func _on_jam_connect_player_connected(pid: int, username: String) -> void:
 	var p = peer_audio_playback_scn.instantiate()
 	p.peer_id = pid
 	p.username = username
-	p.position = $Peers.get_child_count() * Vector2(50, 0)
+	p.position = $Peers.get_child_count() * Vector2(100, 0)
 	p.modulate = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
 	$Peers.add_child(p)
 
