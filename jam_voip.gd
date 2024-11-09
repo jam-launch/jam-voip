@@ -21,6 +21,7 @@ func _ready() -> void:
 #
 
 func _on_jam_connect_local_player_joined() -> void:
+	%CountdownClock.visible = false
 	$AudioInputCapture.initialize()
 	$AudioInputCapture.start_streaming()
 
@@ -40,7 +41,8 @@ func _on_jam_connect_player_connected(pid: int, username: String) -> void:
 	var p = peer_audio_playback_scn.instantiate()
 	p.peer_id = pid
 	p.username = username
-	p.position = Vector2(randf_range(-200, 200), 0)
+	p.position = $Peers.get_child_count() * Vector2(50, 0)
+	p.modulate = Color(randf_range(0.1, 1.0), randf_range(0.1, 1.0), randf_range(0.1, 1.0))
 	$Peers.add_child(p)
 
 func _on_jam_connect_player_disconnected(pid: int, username: String) -> void:

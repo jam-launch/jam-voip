@@ -4,7 +4,10 @@ class_name PeerAudioPlayback
 var initial_buffer_packets := 3
 var decoder := GodOpusDecoder.new()
 var peer_id := 0
-var username := ""
+var username := "":
+	set(v):
+		username = v
+		%Username.text = v
 
 class CompressedAudioPacket:
 	var pkt: PackedByteArray
@@ -32,6 +35,7 @@ func _process(delta: float) -> void:
 		else:
 			return
 	
+	var max_volume := 0.0
 	while pkt_buffer.size() > 0:
 		if playback.get_frames_available() < pkt_buffer[0].samples:
 			break
@@ -39,6 +43,10 @@ func _process(delta: float) -> void:
 		var decoded_frames = decoder.decode_as_stream_buffer(opus_pkt.pkt)
 		for f in decoded_frames:
 			playback.push_frame(f)
+			if absf(f.x) > max_volume:
+				max_volume = absf(f.x)
+	
+	$Sprite2D.scale = $Sprite2D.scale.lerp(Vector2(0.25 + log(1.0 + (max_volume * 2)), 0.25 + log(1.0 + (max_volume * 2))), 0.3)
 
 func queue_pkt(pkt: PackedByteArray, samples: int):
 	pkt_buffer.push_back(CompressedAudioPacket.create(pkt, samples))
